@@ -1,0 +1,180 @@
+.patient-dashboard-head{
+    width: 70%;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    /* padding-left: 100px;
+    padding-right: 100px; */
+    margin-top: 120px;
+}
+
+.patient-info{
+
+}
+
+.title{
+    font-size: 25px;
+
+}
+
+.patient-basic-info{
+   display: grid;
+   grid-template-columns: 33% 33% 33%;
+   padding: 20px;
+   align-items: center;
+   border: solid 1px rgba(0,0,0,0.1);
+   border-radius: 1px;
+   margin-top: 10px;
+
+}
+
+.common-flex{
+    display: flex;
+    padding: 5px;
+}
+
+.common-flex p{
+    padding-left: 10px;
+    font-size: 19px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+    color: rgb(131, 130, 130);
+}
+
+.p-name P{
+    font-size: 22px;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+    color: rgb(131, 130, 130);
+}
+
+.p-name span{
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+    color: rgb(154, 152, 152);
+    font-size: 19px;
+}
+
+.fa-icon{
+    color: rgb(131, 130, 130);
+}
+
+
+
+
+.patient-summary{
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    padding: 20px;
+    align-items: center;
+    border: solid 1px rgba(0,0,0,0.1);
+    border-radius: 1px;
+    margin-top: 10px;
+ 
+ }
+
+ .ps-title{
+    margin-top: 15px;
+ }
+
+ .patient-summary .p-name p{
+    margin-top: 10px;
+ }
+.disease-list-body{
+    display: flex;
+    flex-direction: column;
+}
+
+.disease-list-body .disease-list{
+    padding: 5px;
+}
+
+.disease-list{
+    display: flex;
+}
+
+.d-name{
+  padding-right: 5px;
+  font-size: 19px;
+  color: rgb(131, 130, 130);;
+}
+.d-summary{
+   color: rgb(131, 130, 130);
+   font-style: oblique;
+   text-decoration: underline;
+   text-decoration-color: rgb(147, 196, 179);
+   font-size: 18px;
+   margin-left: 10px;
+}
+
+.ac-condition{
+    font-size: 20px !important;
+    padding-bottom: 5px;
+}
+
+.last-appoint-head{
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(0,0,0,0.1) !important;
+    border: 1px solid rgba(0,0,0,0.1);
+    padding: 10px;
+    margin-left: 10px;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.last-appoint{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    margin-left: 10px;
+}
+
+.arrow-up{
+    transform: rotate(60deg);
+    margin-top: 11px;
+}
+
+.ac-condition{
+    padding-bottom: 15px;
+}
+
+.charts-1{
+    display: flex;
+    margin-top: 30px;
+}
+
+
+.heart-bit-chart{
+    width: 50%;
+    padding-right: 20px;
+}
+
+.blood-pressure-chart{
+    width: 50%;
+    margin-left: 20px;
+
+}
+
+.chart-w{
+    
+}
+
+.date-pick{
+    margin-top: 20px;
+}
+
+.date-pick p{
+    padding: 10px;
+    padding-left: 0px;
+    font-size: 17px;
+}
+.d-picker{
+    padding: 5px;
+    width: 250px;
+    height: 30px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 3px;
+    border-style: none;
+    font-size: 18px;
+}
