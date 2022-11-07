@@ -1,10 +1,12 @@
 import {
    SET_DOCTOR_DASHBOARD,
+   SET_NEW_PRESCRIPTION,
    SET_USER_DATA,
 } from './actionTypes';
 
 const DEFAULT_STATE = {
     isDoctorDashboard: false,
+    isNewPrescriptionVisible: false,
     userData:{}
 }
 
@@ -25,6 +27,12 @@ export default (state = DEFAULT_STATE, action) =>{
                 userData: action.userData
             }
 
+        case SET_NEW_PRESCRIPTION:
+            return{
+                ...state,
+                isNewPrescriptionVisible: action.isNewPrescriptionVisible
+            }
+    
         default:
             return state;
     }

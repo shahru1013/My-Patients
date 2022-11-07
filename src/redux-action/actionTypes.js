@@ -1,7 +1,8 @@
-/**
- * Checked a user already loggedin or not
- */
+
 export const SET_DOCTOR_DASHBOARD = "SET_USER_LOGGED";
+
+export const SET_NEW_PRESCRIPTION = "SET_NEW_PRESCRIPTION";
+
 /**
  * Set user data after login
  */

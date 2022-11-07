@@ -372,8 +372,8 @@ export default function Prescription(props) {
                           </div>
                         }
 
-                        <p className="adv_text uneditable" style={{outline: 0}} data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable={isEditable}>
-                        </p>
+                        <ul className="adv_text uneditable" style={{outline: 0}} data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable={isEditable}>
+                        </ul>
                         <div className="adv_action">
                           <button id="adv_save" data-prescription_id="<?php echo $presc->prescription_id; ?>" className="btn btn-sm btn-success save">Save</button>
                           <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
@@ -387,7 +387,7 @@ export default function Prescription(props) {
                     <div className="medicine">
                       <section className="med_list">
                       </section>
-                      {isEditable && <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">Click to add...</div>}
+                      {isEditable && <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">Click this box to add medicine...</div>}
                     </div>
                   </td>
                 </tr>}
