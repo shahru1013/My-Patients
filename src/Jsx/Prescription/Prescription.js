@@ -4,8 +4,15 @@ import $ from 'jquery';
 import Mustache from 'mustache';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import PrescriptionLogo from '../Images/prescription_logo.jpg';
 
-export default function Prescription() {
+export default function Prescription(props) {
+
+  const medicines = props?.medicine || [];
+  const advice = props?.advice;
+  const symptoms = props?.symptoms;
+  const isEditable = props?.isEditable;
+  const tests = props?.tests;
 
 
   useEffect(()=>{
@@ -20,7 +27,7 @@ export default function Prescription() {
 // <script src="/tdk/scripts/jquery.dataTables.js" type="text/javascript"></script>
 // <script src="/tdk/scripts/dataTables.bootstrap.js" type="text/javascript"></script>
 
-
+   if(isEditable){
 
     $(document).ready(function() {
       Date.prototype.calcDate = function(days) {
@@ -218,6 +225,35 @@ export default function Prescription() {
         medicine.append(sourceHTML);
       })
     });
+    return;
+  }
+    let med_id = 1;
+    if(!isEditable){
+      
+      if(medicines != null){
+        medicines.forEach(element => {
+          med_id++;
+          let sourceTemplate = $("#new_medicine").html();
+          Mustache.parse(sourceTemplate);
+          let sourceHTML = Mustache.render(sourceTemplate, { med_id });
+          let medicine = $(".med_list");
+          medicine.append(sourceHTML);
+          console.log('ee ', element);
+          console.log('ee ', $("data-med_id"));
+          $(".med-"+med_id).val(element?.medicineName);
+          $(".med-"+med_id).prop('readonly', true);
+          $(".uneditable").prop('readonly', true);
+          $(".sc-"+med_id).append(element?.slot);
+          $(".taking-time-"+med_id).append(element?.takenTime);
+          $(".taking-for-"+med_id).append('Taking for '+element?.duration);
+          
+
+          
+          
+        });
+      }
+
+    }
 
   },[])
 
@@ -252,7 +288,7 @@ export default function Prescription() {
                   <td colSpan={2}>
                     <div className="header">
                       <div className="logo">
-                        <img src="https://seeklogo.com/images/H/hospital-clinic-plus-logo-7916383C7A-seeklogo.com.png" />
+                        <img src={PrescriptionLogo} />
                       </div>
                       <div className="credentials">
                         <h4>Dr. Abdul Kashem</h4>
@@ -267,9 +303,26 @@ export default function Prescription() {
                 { <tr>
                   <td width="40%">
                     <div className="desease_details">
-                      <div className="symptoms">
+                      <div className="symptoms uneditable">
                         <h4 className="d-header">Symptoms</h4>
-                        <ul className="symp" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
+
+                        {
+                          !isEditable && <div style={{marginTop: '10px'}}>
+                            
+                            {
+                              symptoms?.map((val, id)=>{
+                                return(
+                                  <ul>
+                                    <li>{val}</li>
+                                  </ul>
+                                )
+                              })
+                            }
+
+                          </div>
+                        }
+
+                        <ul className="symp uneditable" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable={isEditable}>
                         </ul>
                         <div className="symp_action">
                           <button id="symp_save" data-prescription_id="<?php echo $presc->prescription_id; ?>" className="btn btn-sm btn-success save">Save</button>
@@ -278,16 +331,48 @@ export default function Prescription() {
                       </div>
                       <div className="tests">
                         <h4 className="d-header">Tests</h4>
-                        <ul className="tst" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
+                        {
+                          !isEditable && <div style={{marginTop: '10px'}}>
+                            
+                            {
+                              tests?.map((val, id)=>{
+                                return(
+                                  <ul>
+                                    <li>{val}</li>
+                                  </ul>
+                                )
+                              })
+                            }
+
+                          </div>
+                        }
+                        <ul className="tst uneditable" data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable={isEditable}>
                         </ul>
                         <div className="test_action">
                           <button id="test_save" data-prescription_id="<?php echo $presc->prescription_id; ?>" className="btn btn-sm btn-success save">Save</button>
                           <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
                         </div>
                       </div>
-                      <div className="advice">
+                      <div className="advice symptoms uneditable">
                         <h4 className="d-header">Advice</h4>
-                        <p className="adv_text" style={{outline: 0}} data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable="true">
+
+                        {
+                          !isEditable && <div style={{marginTop: '10px'}}>
+                            
+                            {
+                              advice?.map((val, id)=>{
+                                return(
+                                  <ul>
+                                    <li>{val}</li>
+                                  </ul>
+                                )
+                              })
+                            }
+
+                          </div>
+                        }
+
+                        <p className="adv_text uneditable" style={{outline: 0}} data-toggle="tooltip" data-placement="bottom" title="Click to edit." contentEditable={isEditable}>
                         </p>
                         <div className="adv_action">
                           <button id="adv_save" data-prescription_id="<?php echo $presc->prescription_id; ?>" className="btn btn-sm btn-success save">Save</button>
@@ -302,7 +387,7 @@ export default function Prescription() {
                     <div className="medicine">
                       <section className="med_list">
                       </section>
-                      <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">Click to add...</div>
+                      {isEditable && <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">Click to add...</div>}
                     </div>
                   </td>
                 </tr>}
@@ -317,12 +402,13 @@ export default function Prescription() {
         </div>
         <script id="new_medicine" type="text/template">
         { <div className="med" style={{}}>
-           <input className="med_name" data-med_id="{{med_id}}" data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" />
+           <input className="med_name med-{{med_id}}" data-med_id="{{med_id}}" data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" />
           <div className="med_name_action">
             <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">Save</button>
             <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
           </div>
           <div className="schedual">
+          {!isEditable && <h5 className='sc-{{med_id}}'></h5>}
             <div className="sc_time folded">
               <select className="sc" data-med_id="{{med_id}}">
                 <option value="1+1+1" selected>1+1+1</option>
@@ -336,6 +422,7 @@ export default function Prescription() {
                 <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">✓</button>
               </div>
             </div>
+            {!isEditable && <h5 className='taking-time-{{med_id}}' style={{marginLeft: '20px'}}></h5>}
             <div className="taking_time select folded">
               <select className="meal" data-med_id="{{med_id}}">
                 <option value={1} selected>After Meal</option>
@@ -348,7 +435,8 @@ export default function Prescription() {
             </div>
           </div>
           <div className="med_footer">
-            <div className="period folded">
+          {!isEditable && <h5 className='taking-for-{{med_id}} med_period'></h5>}
+            <div className="period folded" style={{display: !isEditable?'block':'Hidden'}}>
               Take for <input className="med_period" type="text" data-med_id="{{med_id}}" placeholder="? days/weeks..." />
               <div className="med_period_action">
                 <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">✓</button>
@@ -369,7 +457,8 @@ export default function Prescription() {
 
     </div>
 
-<button style={{width: '300px', height:'50px', marginLeft: 'auto', marginRight: 'auto', background: 'rgba(0,0,0,0.2)', marginTop: '500px',}} onClick={()=>dPdf()}>Save Prescription</button></>
+{/* <button style={{width: '300px', height:'50px', marginLeft: 'auto', marginRight: 'auto', background: 'rgba(0,0,0,0.2)', marginTop: '500px',}} onClick={()=>dPdf()}>Save Prescription</button> */}
+</>
     
   )
 }

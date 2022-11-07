@@ -29,11 +29,13 @@ body {
     color: #333;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
   }
   .logo {
-    flex: 1;
+    /* flex: 1; */
+    margin-left: 15%;
+    margin-right: 40px;
   }
   .logo img {
     width: 120px;
@@ -41,7 +43,7 @@ body {
     float: left;
   }
   .credentials {
-    flex: 1;
+    /* flex: 1; */
   }
   .credentials h4 {
     line-height: 1em;
@@ -63,7 +65,7 @@ body {
   .d-header {
     width: 100%;
     text-align: center;
-    background: mediumseagreen;
+    background: rgb(118, 157, 234);
     padding: 5px;
     color: white;
     font-weight: 800;
@@ -236,7 +238,7 @@ body {
     margin: 10px 0px;
   }
   .med:hover hr {
-    border-top: 3px #111 solid;
+    /* border-top: 3px #111 solid; */
   }
   .med_period_action {
     float: right;
@@ -256,8 +258,8 @@ body {
     display: none;
   }
   .med:hover .delete {
-    display: inline;
-    opacity: 1;
+    /* display: inline;
+    opacity: 1; */
   }
   .folded {
     visibility: hidden;

@@ -6,6 +6,46 @@ import Prescription from '../Prescription/Prescription';
 export default function PrescriptionList() {
   const [startDate, setStartDate] = useState(new Date());
 
+  const medicines = [
+    {
+    medicineName: 'Tab - Napa 500mg',
+    takenTime: 'After Meal',
+    slot: '1+1+1',
+    duration: '7 days'
+    },
+    {
+      medicineName: 'Tab - Napa 500mg',
+      takenTime: 'After Meal',
+      slot: '1+1+1',
+      duration: '7 days'
+    },
+    {
+      medicineName: 'Tab - Clatrizol 500mg',
+      takenTime: 'After Meal',
+      slot: '1+1+1',
+      duration: '7 days'
+    },
+
+];
+
+ const advice = [
+  'Take proper rest.',
+  'Walking 30 minutes',
+  'Water as much as 3 liters / day'
+ ];
+
+ const symptoms = [
+  'Severe Fever',
+  'Mild Headache',
+  'Ensomnia'
+ ]
+
+ const tests = [
+  'ECG Digital',
+  'Ultrasonography: abdomen',
+  'Echo: 600mhz'
+ ]
+
   return (
     <div className="presc-list-head">
 
@@ -19,7 +59,13 @@ export default function PrescriptionList() {
 
         <div className="pat-prescription">
 
-            <Prescription/>
+            <Prescription
+             medicine = {medicines}
+             advice = {advice}
+             symptoms = {symptoms}
+             tests = {tests}
+             isEditable = {false}
+            />
 
         </div>
 

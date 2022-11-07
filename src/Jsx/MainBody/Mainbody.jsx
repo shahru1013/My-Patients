@@ -68,7 +68,7 @@ class Mainbody extends Component {
             />
             {/* Image and name section start */}
             <div className="img-name-sec">
-              <p>Dr. Shahru Islam</p>
+              <p>Dr. Abdul Kashem</p>
             </div>
 
             {/*responsive navbar */}
