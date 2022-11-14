@@ -180,6 +180,127 @@ class Mainbody extends Component {
                 </div>
                 </div>}
 
+                {
+                  <div className="patient-info" style={{marginTop:'20px'}}>
+                  <p className='title'>Basic Checkups</p>
+
+                 <div className="patient-basic-info">
+
+                  {<div className="basic-checkups">
+
+                    <p style={{marginLeft: '20px', fontSize: '19px', textDecoration: 'underline'}}>Blood Pressure</p>
+                    <div className="blood-pressure-input">
+
+                     <div className="boxes">
+
+                      <p>Systolic</p>
+
+                     <input
+                       title="mmHg"
+                       type={"number"}
+                       placeholder="mmHg"
+                       required
+
+                      />
+
+                     </div>
+                     <div className="boxes">
+                       <p style={{height: '28px'}}></p>
+                       <p style={{fontWeight: 'bold', fontSize: '25px'}}>{"/"}</p>
+                     </div>
+
+                     <div className="boxes">
+                      
+
+                      <p>Diastolic</p>
+
+                     <input
+                       title="mmHg"
+                       type={"number"}
+                       placeholder="mmHg"
+                       required
+
+                      />
+
+                     </div>
+                     </div>     
+
+                  </div>}
+
+                  
+                  {/* {<div className="basic-checkups">
+
+                    <p style={{marginLeft: '20px', fontSize: '19px', textDecoration: 'underline'}}>Body Temperature</p>
+                    <div className="blood-pressure-input">
+
+                     <div className="boxes">
+
+                      <p>Temperature</p>
+
+                     <input
+                       title="bt"
+                       type={"number"}
+                       placeholder="degree"
+                       required
+
+                      />
+
+                     </div>
+                     </div>     
+
+                  </div>} */}
+
+                   {<div className="basic-checkups">
+
+                    <p style={{marginLeft: '20px', fontSize: '19px', textDecoration: 'underline'}}>Body Temperature</p>
+                    <div className="blood-pressure-input">
+
+                     <div className="boxes">
+
+                      <p>Temperature</p>
+
+                     <input
+                       title="bt"
+                       type={"number"}
+                       placeholder="degree"
+                       required
+
+                      />
+
+                     </div>
+                     </div>     
+
+                  </div>}
+
+                  
+                  {<div className="basic-checkups">
+
+                      <p style={{marginLeft: '20px', fontSize: '19px', textDecoration: 'underline'}}>Heart rate</p>
+                      <div className="blood-pressure-input">
+
+                      <div className="boxes">
+
+                        <p>Rate/min</p>
+
+                      <input
+                        title="bt"
+                        type={"number"}
+                        placeholder="count"
+                        required
+
+                        />
+
+                      </div>
+                      </div>     
+
+                      </div>}
+
+                  </div>
+                  </div>
+
+
+                }
+
                  <Prescription
                   isEditable = {true}
                  />
