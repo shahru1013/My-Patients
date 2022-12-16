@@ -3,48 +3,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Prescription from '../Prescription/Prescription';
 
-export default function PrescriptionList() {
+export default function PrescriptionList(props) {
   const [startDate, setStartDate] = useState(new Date());
+  const patientData = props?.patientData;
 
-  const medicines = [
-    {
-    medicineName: 'Tab - Napa 500mg',
-    takenTime: 'After Meal',
-    slot: '1+1+1',
-    duration: '7 days'
-    },
-    {
-      medicineName: 'Tab - Napa 500mg',
-      takenTime: 'After Meal',
-      slot: '1+1+1',
-      duration: '7 days'
-    },
-    {
-      medicineName: 'Tab - Clatrizol 500mg',
-      takenTime: 'After Meal',
-      slot: '1+1+1',
-      duration: '7 days'
-    },
+  
+  console.log('pppp  dd ', patientData, props);
+  const medicines = JSON.parse(patientData?.data[0]?.prescription);
 
-];
+ const advice = JSON.parse(patientData?.data[0]?.advice)
 
- const advice = [
-  'Take proper rest.',
-  'Walking 30 minutes',
-  'Water as much as 3 liters / day'
- ];
+ const symptoms = []//JSON.parse(patientData?.data[0]?.symptoms)
 
- const symptoms = [
-  'Severe Fever',
-  'Mild Headache',
-  'Ensomnia'
- ]
-
- const tests = [
-  'ECG Digital',
-  'Ultrasonography: abdomen',
-  'Echo: 600mhz'
- ]
+ const tests = JSON.parse(patientData?.data[0]?.tests)
 
   return (
     <div className="presc-list-head">

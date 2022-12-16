@@ -10,10 +10,16 @@ import PatientDashboard from "../PatientDashboard/PatientDashboard";
 import { connect } from "react-redux";
 import Prescription from "../Prescription/Prescription";
 import { setIsDashBoardVisible, setIsNewPrescriptionVisible } from "../../redux-action/action";
+import axios from "axios";
 class Mainbody extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      systolic: 0,
+      diastolic: 0,
+      bodyTemp: 0,
+      heartRate: 0
+    };
   }
   /* Componentdidmount method */
   componentDidMount() {
@@ -60,6 +66,58 @@ class Mainbody extends Component {
       navOpen: !this.state.navOpen,
     });
   }
+
+  changeValue=(e)=>{
+    
+
+  }
+
+  receivedValue = (allMedicines, allAdvices, allTests, allsymp)=>{
+    if(allMedicines?.length < 1){
+      alert('please precribed medicine first');
+      return;
+    }
+
+
+    let bodyData = {
+      allMedicines: allMedicines,
+      allAdvices: allAdvices,
+      allTests: allTests,
+      allsymp: allsymp,
+      systolic: this.state.systolic,
+      diastolic: this.state.diastolic,
+      bodyTemp: this.state.bodyTemp,
+      heartRate: this.state.heartRate,
+      patientId: null,
+      email: 'shahruislam2000@gmail.com',
+      mobile: '+8801987418344',
+      age: 23,
+      first_name: 'shahru islam',
+      address: 'Australia, Melbourne'
+    }
+
+    axios(
+      {
+        method: 'POST',
+        url: 'http://localhost:8080/prepare-new-prescription',
+        data: bodyData
+      }
+    ).then((res)=>{
+      console.log('rttt ', res);
+      if(res?.data?.message == 'successfull'){
+        const { dispatch } = this.props;
+        localStorage.setItem('p_id', res?.data?.patientId)
+        dispatch(setIsNewPrescriptionVisible(false));
+        dispatch(setIsDashBoardVisible(true));
+      }
+    }).catch((err)=>{
+      alert('Error: Please try again!')
+    })
+
+
+  }
+
+
 
   // go to link
   goTo(link) {
@@ -113,7 +171,7 @@ class Mainbody extends Component {
                   onClick={() => this.navClickHandle("prescription", "li-new-prescription")}
                   id="li-home"
                 >
-                  Prepare a new prescription
+                  Prepare a new prescriptionb
                 </li>
                 <li
                   tabIndex="1"
@@ -200,7 +258,13 @@ class Mainbody extends Component {
                        type={"number"}
                        placeholder="mmHg"
                        required
-
+                       onChange={(e)=>{
+                        console.log('eeeeeeeeee ', e);
+                         this.setState({
+                            systolic: e.target.value
+                         })
+                       }}
+                       value = {this.state.systolic}
                       />
 
                      </div>
@@ -219,6 +283,12 @@ class Mainbody extends Component {
                        type={"number"}
                        placeholder="mmHg"
                        required
+                       onChange={(e)=>{
+                         this.setState({
+                            diastolic: e.target.value
+                         })
+                       }}
+                       value = {this.state.diastolic}
 
                       />
 
@@ -262,8 +332,14 @@ class Mainbody extends Component {
                      <input
                        title="bt"
                        type={"number"}
-                       placeholder="degree"
+                       placeholder="FarenHeit"
                        required
+                       onChange={(e)=>{
+                         this.setState({
+                            bodyTemp: e.target.value
+                         })
+                       }}
+                       value = {this.state.bodyTemp}
 
                       />
 
@@ -287,7 +363,12 @@ class Mainbody extends Component {
                         type={"number"}
                         placeholder="count"
                         required
-
+                        onChange={(e)=>{
+                           this.setState({
+                              heartRate: e.target.value
+                           })
+                         }}
+                         value = {this.state.heartRate}
                         />
 
                       </div>
@@ -298,12 +379,14 @@ class Mainbody extends Component {
                   </div>
                   </div>
 
-
                 }
 
                  <Prescription
                   isEditable = {true}
+                  receivedValue = {this.receivedValue}
                  />
+
+
              </div>
             }  
 

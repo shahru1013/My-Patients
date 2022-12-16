@@ -1,13 +1,39 @@
 import { faGoodreads } from '@fortawesome/free-brands-svg-icons';
 import { faArrowUp, faLocationArrow, faMailBulk, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
 import React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import BloodPressureChart from '../PatientCharts/BloodPressureChart';
 import HeartBitChart from '../PatientCharts/HeartBitChart';
 import PrescriptionList from '../PrevPrescriptions/PrescriptionList';
 import './style.css';
 
 export default function PatientDashboard() {
+  const [patientData, setPatientData] = useState(null);
+
+  useEffect(()=>{
+
+    const patientId = localStorage.getItem('p_id');
+
+    axios(
+      {
+        method: 'GET',
+        url: 'http://localhost:8080/get-prescriptions',
+        params: {
+          patientId: patientId
+        }
+      }
+    ).then((res)=>{
+      console.log('prescrip ', res.data, res.data?.length);
+      setPatientData(res.data);
+    }).catch((err)=>{
+      alert('Error: Please try again!')
+    })
+
+  },[]);
+
   return (
     <div className='patient-dashboard-head'>
 
@@ -142,7 +168,7 @@ export default function PatientDashboard() {
 
           <div className="prev-prescriptions">
 
-            <PrescriptionList/>
+           {patientData && <PrescriptionList patientData={patientData}/>}
 
           </div>
           

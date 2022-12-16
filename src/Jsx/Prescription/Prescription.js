@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './style.css';
 import $ from 'jquery';
 import Mustache from 'mustache';
@@ -14,18 +14,14 @@ export default function Prescription(props) {
   const isEditable = props?.isEditable;
   const tests = props?.tests;
 
+  const [sympToms, setSympToms] = useState({});
+  const [testsList, setTestsList] = useState({});
+  const [adviceList, setAdviceList] = useState({});
+  const [medicineList, setMedicineList] = useState([]);
+
+
 
   useEffect(()=>{
-    // const script = document.createElement('script');
-    // script.src = "https://code.jquery.com/ui/1.12.1/jquery-ui.js";
-    // script.async = true;
-    // document.body.appendChild(script);
-     
-//     <script src="/tdk/scripts/jquery.min.js" type="text/javascript"></script>
-// <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-// <script src="/tdk/scripts/bootstrap.js" type="text/javascript"></script>
-// <script src="/tdk/scripts/jquery.dataTables.js" type="text/javascript"></script>
-// <script src="/tdk/scripts/dataTables.bootstrap.js" type="text/javascript"></script>
 
    if(isEditable){
 
@@ -240,16 +236,12 @@ export default function Prescription(props) {
           medicine.append(sourceHTML);
           console.log('ee ', element);
           console.log('ee ', $("data-med_id"));
-          $(".med-"+med_id).val(element?.medicineName);
+          $(".med-"+med_id).val(element?.med_name);
           $(".med-"+med_id).prop('readonly', true);
           $(".uneditable").prop('readonly', true);
-          $(".sc-"+med_id).append(element?.slot);
-          $(".taking-time-"+med_id).append(element?.takenTime);
-          $(".taking-for-"+med_id).append('Taking for '+element?.duration);
-          
-
-          
-          
+          $(".sc-"+med_id).append(element?.med_schedule);
+          $(".taking-time-"+med_id).append(element?.med_taken_after == 1?'After Meal': 'Before Meal');
+          $(".taking-for-"+med_id).append('Taking for '+element?.med_duration);
         });
       }
 
@@ -274,10 +266,51 @@ export default function Prescription(props) {
   }
 
 
+  const collectInputsData=()=>{
+    let allMedicines = [];
+    for(let i=2;i<10;i++){
+       if($(`.med_name-${i}`).val()){
+        allMedicines.push(
+          {
+            med_name: $(`.med_name-${i}`).val(),
+            med_schedule: $(`.med_select-${i}`).val(),
+            med_taken_after: $(`.med_meal-${i}`).val(),
+            med_duration: $(`.med_duration-${i}`).val()
+          }
+        )
+       }
+    }
+    setMedicineList(allMedicines);
+
+    let allsymp = [];
+    $('.symp li').each(function(i)
+    {
+      allsymp.push($(this).text());
+      setSympToms(allsymp);
+    });
+
+    let allTests = [];
+    $('.tst li').each(function(i)
+    {
+      allTests.push($(this).text());
+      setTestsList(allTests);
+    });
+
+    let allAdvices = [];
+    $('.adv_text li').each(function(i)
+    {
+      allAdvices.push($(this).text());
+      setAdviceList(allAdvices);
+    });
+
+    props.receivedValue(allMedicines, allAdvices, allTests, allsymp);
+  }
+
+
 
   return (
     <>
-    <div>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
 
      <div>
         <div className="wrapper">
@@ -402,7 +435,7 @@ export default function Prescription(props) {
         </div>
         <script id="new_medicine" type="text/template">
         { <div className="med" style={{}}>
-           <input className="med_name med-{{med_id}}" data-med_id="{{med_id}}" data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" />
+           <input className="med_name med-{{med_id}} med_name-{{med_id}}" data-med_id="{{med_id}}" data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" />
           <div className="med_name_action">
             <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">Save</button>
             <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
@@ -410,13 +443,15 @@ export default function Prescription(props) {
           <div className="schedual">
           {!isEditable && <h5 className='sc-{{med_id}}'></h5>}
             <div className="sc_time folded">
-              <select className="sc" data-med_id="{{med_id}}">
-                <option value="1+1+1" selected>1+1+1</option>
+              <select className="sc med_select-{{med_id}}" data-med_id="{{med_id}}" onChange={(e)=>{
+                console.log('cccccccc ', e);
+              }}>
+                <option value="1+1+1">1+1+1</option>
                 <option value="1+0+1">1+0+1</option>
-                <option value="0+1+1">1+1+1</option>
-                <option value="1+0+0">1+1+1</option>
-                <option value="0+0+1">1+1+1</option>
-                <option value="1+1+1+1">1+1+1+1</option>
+                <option value="0+1+1">0+1+1</option>
+                <option value="1+0+0">1+0+0</option>
+                <option value="0+0+1">0+0+1</option>
+                <option value="1+1+0">1+1+0</option>
               </select>
               <div className="med_when_action">
                 <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">✓</button>
@@ -424,8 +459,8 @@ export default function Prescription(props) {
             </div>
             {!isEditable && <h5 className='taking-time-{{med_id}}' style={{marginLeft: '20px'}}></h5>}
             <div className="taking_time select folded">
-              <select className="meal" data-med_id="{{med_id}}">
-                <option value={1} selected>After Meal</option>
+              <select className="meal med_meal-{{med_id}}" data-med_id="{{med_id}}">
+                <option value={1}>After Meal</option>
                 <option value={2}>Before Meal</option>
                 <option value={3}>Take any time</option>
               </select>
@@ -437,7 +472,7 @@ export default function Prescription(props) {
           <div className="med_footer">
           {!isEditable && <h5 className='taking-for-{{med_id}} med_period'></h5>}
             <div className="period folded" style={{display: !isEditable?'block':'Hidden'}}>
-              Take for <input className="med_period" type="text" data-med_id="{{med_id}}" placeholder="? days/weeks..." />
+              Take for <input className="med_period med_duration-{{med_id}}" type="text" data-med_id="{{med_id}}" placeholder="? days/weeks..." />
               <div className="med_period_action">
                 <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">✓</button>
               </div>
@@ -452,8 +487,21 @@ export default function Prescription(props) {
         }
         </script>
       </div>
-
-      
+      <div style={{position: 'fixed', right:0, zIndex: 99999, padding: 20}}>
+      <button style={{
+        width: 'auto',
+        padding: 10,
+        fontSize: 14,
+        color: 'rgba(0,0,0,0.7)',
+        fontFamily: 'monospace',
+        cursor: 'pointer',
+        border: 'none',
+        filter: 'drop-shadow(0.2rem 0.2rem 1rem rgba(0,0,0, 0.3))'
+      }} onClick={()=>{
+        collectInputsData();
+      }}>Print Prescription</button>
+      </div>
+      {console.log('all med ', medicineList)}
 
     </div>
 
