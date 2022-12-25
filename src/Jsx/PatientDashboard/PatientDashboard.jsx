@@ -5,13 +5,21 @@ import axios from 'axios';
 import React from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../../redux-action/action';
 import BloodPressureChart from '../PatientCharts/BloodPressureChart';
 import HeartBitChart from '../PatientCharts/HeartBitChart';
 import PrescriptionList from '../PrevPrescriptions/PrescriptionList';
 import './style.css';
 
-export default function PatientDashboard() {
+export default function PatientDashboard(props) {
   const [patientData, setPatientData] = useState(null);
+  const [user, setUser]=useState(null);
+  const [activeCondition, setActiveCondition]=useState(null);
+  const [lastAppointment, setLastAppointment] = useState(null);
+  const [heartRate, setHeartRate] = useState(null)
+  const [bloodP, setBloodP] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(()=>{
 
@@ -26,43 +34,77 @@ export default function PatientDashboard() {
         }
       }
     ).then((res)=>{
-      console.log('prescrip ', res.data, res.data?.length);
-      setPatientData(res.data);
+      console.log('prescrip omaga kkk 111',res, res.data, res.data?.length);
+      if(res.data.prescriptions.length <= 0){
+        return;
+      }else{
+  //       const labels = ['12-10-2022', '01-03-2023', '04-06-2023', '11-07-2023', '17-08-2023', '11-10-2023', '12-01-2022'];
+  // const heartBit = [60, 65, 66, 63, 75, 82, 60];
+//   const labels = ['12-10-2022', '01-03-2023', '04-06-2023', '11-07-2023', '17-08-2023', '11-10-2023', '12-01-2022'];
+// const pressureUpper = [110, 125, 106, 127, 110, 109, 116];
+// const pressureLower = [80, 85, 76, 83, 85, 82, 80];
+        dispatch(setUserData(res.data.user));
+        setPatientData(res.data.prescriptions);
+        setUser(res.data.user);
+        setLastAppointment(res.data.prescriptions[res.data.prescriptions?.length - 1]?.date);
+        let levels = [], heartB = [], pUpper = [], pLower = [];
+        res.data.prescriptions?.map((val)=>{
+           levels.push(val?.date);
+           heartB.push(val?.heart_rate || 0);
+           pUpper.push(val?.diastolic);
+           pLower.push(val?.systolic);
+        });
+        setHeartRate({
+          levels: levels,
+          heartBit: heartB
+        })
+
+        setBloodP({
+          pressureUpper: pUpper,
+          pressureLower: pLower,
+          levels: levels
+        })
+
+
+      }
     }).catch((err)=>{
-      alert('Error: Please try again!')
+      console.log('omaga errrr',{err});
+      alert('Error: Please try again! 222')
     })
 
   },[]);
 
   return (
     <div className='patient-dashboard-head'>
+      {console.log('pdddddddd ',patientData, user)}
 
-      <div className="patient-info">
+     { user?.id && <div className="patient-info">
 
           <p className='title'>Patient Information</p>
 
           <div className="patient-basic-info">
                 <div className="p-name">
-                   <p>Daniel Hateru</p>
-                   <span>{"37 yo (Male)"}</span>
+                   <p>{user?.first_name}</p>
+                   <span>{user?.age + " yo (Male)"}</span>
                 </div>
                 <div className="p-address common-flex">
                     <FontAwesomeIcon className='fa-icon' style={{marginTop: '4px'}} icon={faLocationArrow}/>
                     <span>
-                    <p>South city park, Melborne</p>
-                    <p>Australia</p>
+                    {/* <p>South city park, Melborne</p>
+                    <p>Australia</p> */}
+                    <p>{user?.address}</p>
                     </span>
                 </div>
                 <div className="p-contact">
 
                      <div className="phohe common-flex">
                         <FontAwesomeIcon className='fa-icon' icon={faPhone}/>
-                        <p>+880178723628768</p>
+                        <p>{user?.mobile}</p>
                      </div>
 
                      <div className="email common-flex">
                         <FontAwesomeIcon className='fa-icon' icon={faMailBulk}/>
-                        <p>akjbkhvkv@bitb.com</p>
+                        <p>{user?.email}</p>
                      </div>
                 </div>
           </div>
@@ -118,7 +160,7 @@ export default function PatientDashboard() {
                   
                   <div className='last-appoint'>
                      <div className="date">
-                       02 April 2022
+                       {new Date().toLocaleDateString()}
                      </div>
                      <span>Srart Prescribing</span>
                   </div>
@@ -138,11 +180,11 @@ export default function PatientDashboard() {
                   
                       <div className='last-appoint'>
                          <div className="date">
-                           12 March 2021
+                           {lastAppointment}
                          </div>
-                         <div className="days">
+                         {/* <div className="days">
                            176 days ago
-                         </div>
+                         </div> */}
                          
                          <span style={{border: '1px solid #A5A09F', backgroundColor: '#A5A09F', padding: '2px', textAlign: 'center'}}>Follow Up</span>
                       </div>
@@ -157,24 +199,32 @@ export default function PatientDashboard() {
           <div className="charts charts-1">
 
           <div className="heart-bit-chart chart-w">
-            <HeartBitChart/>
+           {heartRate != null && <HeartBitChart val={heartRate}/>}
           </div>
 
           <div className="blood-pressure-chart chart-w">
-            <BloodPressureChart/>
+            {bloodP != null && <BloodPressureChart val={bloodP}/>}
           </div>
 
           </div>
 
           <div className="prev-prescriptions">
 
-           {patientData && <PrescriptionList patientData={patientData}/>}
+           {patientData?.length && <PrescriptionList patientData={patientData}/>}
 
           </div>
           
 
       </div>
-
+}
+{
+  !patientData?.length && <div style={{
+    display: 'flex',
+    justifyContent: 'center'
+  }}>
+    <h1>No patient Data Found!</h1>
+  </div>
+}
     </div>
   )
 }

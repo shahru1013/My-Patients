@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../../config');
 
+const sql = require("../models/db.js");
 /**
  * 
  Insert 
@@ -57,7 +58,12 @@ exports.GetPrescriptionById = (req, res)=>{
     Admin.getPrescriptionById(pId, (err, response)=>{
       console.log('get all prescrip ', response);
       if(!err){
-        res.status(200).send({message: 'success', data: response})
+
+        sql.query(`Select * from patient_info where id = '${pId}';`, (err, userRes)=>{
+          if(!err){
+            res.status(200).send({message: 'success', prescriptions: response, user: userRes[0]})
+          }
+        })
       }else{
         res.status(500).send({message: 'error', data: err})
       }

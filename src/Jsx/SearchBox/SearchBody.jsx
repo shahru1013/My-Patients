@@ -11,6 +11,7 @@ function SearchBody(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const navigateTo = () => history.push('/patient');//eg.history.push('/login');
+  const [patId, setPatId]=useState('');
   useEffect(()=>{
 
   },[])
@@ -18,9 +19,13 @@ function SearchBody(props) {
 
   const _handleKey = (e)=>{
     if (e.key === 'Enter') {
-      setIsLoading(true);
-      setIsLoading(false);
-      dispatch(setIsDashBoardVisible(true));
+      if(patId?.length > 0){
+        localStorage.setItem('p_id', patId);
+        setIsLoading(true);
+        setIsLoading(false);
+        
+        dispatch(setIsDashBoardVisible(true));
+      }
     }
   }
 
@@ -33,6 +38,9 @@ function SearchBody(props) {
 
       <div className='search-box'>
       <TextField
+          onChange={(e)=>{
+             setPatId(e.target.value);
+          }}
           id="outlined-basic"
           variant="outlined"
           fullWidth

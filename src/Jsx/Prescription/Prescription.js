@@ -19,9 +19,15 @@ export default function Prescription(props) {
   const [adviceList, setAdviceList] = useState({});
   const [medicineList, setMedicineList] = useState([]);
 
+  
+ 
+  console.log('omaga kkk 111 ahaha', medicineList, medicines);
 
 
   useEffect(()=>{
+   
+
+   setMedicineList(medicines);
 
    if(isEditable){
 
@@ -225,10 +231,14 @@ export default function Prescription(props) {
   }
     let med_id = 1;
     if(!isEditable){
-      
+      console.log('eeeeeeeeeeeeeeeemmm ');
+      // $('.medicine').empty();
+      // $("#new_medicine").empty();
+      console.log('omaga kkk 777', medicines);
       if(medicines != null){
         medicines.forEach(element => {
           med_id++;
+          
           let sourceTemplate = $("#new_medicine").html();
           Mustache.parse(sourceTemplate);
           let sourceHTML = Mustache.render(sourceTemplate, { med_id });
@@ -367,7 +377,7 @@ export default function Prescription(props) {
                         {
                           !isEditable && <div style={{marginTop: '10px'}}>
                             
-                            {
+                            {tests?.length &&
                               tests?.map((val, id)=>{
                                 return(
                                   <ul>
@@ -392,7 +402,7 @@ export default function Prescription(props) {
                         {
                           !isEditable && <div style={{marginTop: '10px'}}>
                             
-                            {
+                            {advice?.length &&
                               advice?.map((val, id)=>{
                                 return(
                                   <ul>
