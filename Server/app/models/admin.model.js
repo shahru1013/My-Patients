@@ -51,7 +51,7 @@ Admin.insertAPrescription = (data, pat_id, result) =>{
 
 
 Admin.getPrescriptionById = (pId, result)=>{
-   sql.query(`Select * from prescriptions where patient_id = '${pId}';`, (err, res)=>{
+   sql.query(`Select * from prescriptions where patient_id = '${pId}' order by id desc;`, (err, res)=>{
      result(err, res)
    })
 }

@@ -20,6 +20,7 @@ class Mainbody extends Component {
       bodyTemp: 0,
       heartRate: 0
     };
+    this.hasId = localStorage.getItem('p_id');
   }
   /* Componentdidmount method */
   componentDidMount() {
@@ -46,8 +47,9 @@ class Mainbody extends Component {
      }
 
      if(clickedId === "li-treat-another"){
+      localStorage.setItem('p_id', null);
       dispatch(setIsNewPrescriptionVisible(false));
-       dispatch(setIsDashBoardVisible(false));
+      dispatch(setIsDashBoardVisible(false));
      }
 
     }, 300);
@@ -78,6 +80,7 @@ class Mainbody extends Component {
       return;
     }
 
+    console.log('jjjjjdjd ', allAdvices, allTests);
 
     let bodyData = {
       allMedicines: allMedicines,
@@ -143,7 +146,7 @@ class Mainbody extends Component {
             />
             {/* Image and name section start */}
             <div className="img-name-sec">
-              <p>Dr. Abdul Kashem</p>
+              <p>Dr. Hasnat Alam</p>
             </div>
 
             {/*responsive navbar */}
@@ -171,7 +174,7 @@ class Mainbody extends Component {
                   onClick={() => this.navClickHandle("prescription", "li-new-prescription")}
                   id="li-home"
                 >
-                  Prepare a new prescriptionb
+                  Prepare a new prescription
                 </li>
                 <li
                   tabIndex="1"
@@ -210,29 +213,42 @@ class Mainbody extends Component {
                 {<div className="patient-info">
 
                 <p className='title'>Patient Information</p>
-
+{console.log('jjfdjnd jjjh ', this.hasId, !+this.hasId)}
                 <div className="patient-basic-info">
                       <div className="p-name">
-                        <p>Daniel Hateru</p>
-                        <span>{"37 yo (Male)"}</span>
+                        {(+this.hasId) ?  <p>{this.props?.user?.first_name || "Name"}</p>:null}
+                        {(!+this.hasId) &&  
+                        <p>
+                        <input
+                          className="pat-input"
+                          placeholder="Name *"
+                        /></p>}
+                          {(+this.hasId) ? <span>{"37 yo (Male)"}</span>:null}
+                        {(!+this.hasId) &&  
+                        <p>
+                        <input
+                         className="pat-input"
+                          placeholder="Age *"
+                        /></p>}
+                       
                       </div>
                       <div className="p-address common-flex">
                           <FontAwesomeIcon className='fa-icon' style={{marginTop: '4px'}} icon={faLocationArrow}/>
                           <span>
-                          <p>South city park, Melborne</p>
-                          <p>Australia</p>
+                          {/* <p>South city park, Melborne</p> */}
+                          <p>{this.props.user.address}</p>
                           </span>
                       </div>
                       <div className="p-contact">
 
                           <div className="phohe common-flex">
                               <FontAwesomeIcon className='fa-icon' icon={faPhone}/>
-                              <p>+880178723628768</p>
+                              <p>{this.props.user.mobile}</p>
                           </div>
 
                           <div className="email common-flex">
                               <FontAwesomeIcon className='fa-icon' icon={faMailBulk}/>
-                              <p>akjbkhvkv@bitb.com</p>
+                              <p>{this.props.user.email}</p>
                           </div>
                       </div>
                 </div>
@@ -400,9 +416,10 @@ class Mainbody extends Component {
 }
 
 const mapStateToProps=(state)=>{
-  console.log("state  y",state.AppData);
+  console.log("state  y",state);
   return{
-    appData: state.AppData
+    appData: state.AppData,
+    user: state.AppData.userData
  }
 }
 

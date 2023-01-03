@@ -59,7 +59,7 @@ exports.GetPrescriptionById = (req, res)=>{
       console.log('get all prescrip ', response);
       if(!err){
 
-        sql.query(`Select * from patient_info where id = '${pId}';`, (err, userRes)=>{
+        sql.query(`Select * from patient_info where id = '${pId}' order by id asc;`, (err, userRes)=>{
           if(!err){
             res.status(200).send({message: 'success', prescriptions: response, user: userRes[0]})
           }

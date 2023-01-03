@@ -19,9 +19,16 @@ export default function Prescription(props) {
   const [adviceList, setAdviceList] = useState({});
   const [medicineList, setMedicineList] = useState([]);
 
+  const [medCnt, setMedCnt] = useState(1);
+  const [medCntArr, setMedCntArr] = useState([]);
+
+  const [allMatch, setAllMatch] = useState([]);
+  const [matchId, setMatchId] = useState(null);
+
+
   
  
-  console.log('omaga kkk 111 ahaha', medicineList, medicines);
+  console.log('omaga kkk 111 ahaha', medicineList, medicines, advice, sympToms);
 
 
   useEffect(()=>{
@@ -219,12 +226,12 @@ export default function Prescription(props) {
       
       let med_id = 1;
       $("#add_med").click(function() {
-        med_id++;
-        let sourceTemplate = $("#new_medicine").html();
-        Mustache.parse(sourceTemplate);
-        let sourceHTML = Mustache.render(sourceTemplate, { med_id });
-        let medicine = $(".med_list");
-        medicine.append(sourceHTML);
+        // med_id++;
+        // let sourceTemplate = $("#new_medicine").html();
+        // Mustache.parse(sourceTemplate);
+        // let sourceHTML = Mustache.render(sourceTemplate, { med_id });
+        // let medicine = $(".med_list");
+        // medicine.append(sourceHTML);
       })
     });
     return;
@@ -316,6 +323,35 @@ export default function Prescription(props) {
     props.receivedValue(allMedicines, allAdvices, allTests, allsymp);
   }
 
+  const allMedList = [
+    "Napa 200mg",
+    "Ace Plus",
+    "Losectil",
+    "Eno",
+    "Esomiprazol",
+    "Lorense",
+    "Aibtisama",
+    "Actizone",
+    "Narzole",
+    "Agsvd",
+    "labgu"
+  ]
+
+  const doSuggestion=(e)=>{
+    let target =  e.target.value;
+    console.log('all match tar ', target);
+    let match = [];
+    if(target?.length > 0){
+    allMedList?.map((val)=>{
+        if(val.toLowerCase().includes(target.toLowerCase())){
+          match.push(val);
+        }
+    })
+  }
+
+    return match;
+  }
+
 
 
   return (
@@ -334,7 +370,7 @@ export default function Prescription(props) {
                         <img src={PrescriptionLogo} />
                       </div>
                       <div className="credentials">
-                        <h4>Dr. Abdul Kashem</h4>
+                        <h4>Dr. Hasnat Alam</h4>
                         <p>{"MBBS, FCPS (Medicine)"} </p>
                         <small>Dhaka Medical Hospital, Dahaka</small>
                         <br />
@@ -348,8 +384,10 @@ export default function Prescription(props) {
                     <div className="desease_details">
                       <div className="symptoms uneditable">
                         <h4 className="d-header">Symptoms</h4>
+                        {console.log('dsjbdshb ',props, props?.symptoms,props?.tests, sympToms, advice, adviceList)}
 
                         {
+                          
                           !isEditable && <div style={{marginTop: '10px'}}>
                             
                             {
@@ -429,8 +467,132 @@ export default function Prescription(props) {
                     <hr />
                     <div className="medicine">
                       <section className="med_list">
+                        {
+                          console.log('nnnnnnn ', medCnt, medCntArr)
+                        }
+
+                      { medCntArr.map((val)=>{
+                        
+                     
+                      return(
+              <div className="med" style={{}}>
+           <input className={`med_name med-${val+1} med_name-${val+1}`} data-med_id={val+1} data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" onChange={(e)=>{
+              setAllMatch([]);
+              setMatchId(null);
+              let allMatch = doSuggestion(e);
+              setAllMatch(allMatch);
+              setMatchId(val+1);
+              console.log('all matc ', allMatch);
+           }}
+           onClick={()=>{
+            setAllMatch([]);
+            setMatchId(null)
+           }}
+           />
+
+
+                {(matchId == val+1 && allMatch?.length > 0) &&
+
+                <div style={{
+                  position: 'absolute',
+                  right: 0,
+                  marginRight: '30%',
+                  marginTop: '-2%',
+                  padding: 10,
+                  background: 'rgba(0,0,0,0.1)',
+                  zIndex: 9999,
+                  boxShadow: '4px 2px 4px 1px #e4dbdb'
+
+
+
+                }}>
+                  <ul style={{
+                    listStyle: 'none'
+                  }}>
+                    {
+                      allMatch?.map((medName)=>{
+                        return(
+                         <li style={{
+                           cursor: 'pointer',
+                           background: 'rgb(143 149 142)',
+                           padding: 5,
+                           textDecoration: 'underline',
+                           marginBottom: 1,
+                           color: 'white'
+                         }}
+                         onClick={()=>{
+                           $(`.med_name-${val+1}`).val(medName);
+                           setAllMatch([]);
+                           setMatchId(null);
+                         }}
+                         >{medName}</li>
+                        )
+                      })
+                    }
+                    
+                 
+                  </ul>
+                </div>
+
+                }
+
+          <div className="med_name_action">
+            <button data-med_id={val+1} className="btn btn-sm btn-success save">Save</button>
+            <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
+          </div>
+          <div className="schedual">
+          {!isEditable && <h5 className={`sc-${val+1}`}></h5>}
+            <div className="sc_time folded">
+              <select className={`sc med_select-${val+1}`} data-med_id={val+1} onChange={(e)=>{
+                console.log('cccccccc ', e);
+              }}>
+                <option value="1+1+1">1+1+1</option>
+                <option value="1+0+1">1+0+1</option>
+                <option value="0+1+1">0+1+1</option>
+                <option value="1+0+0">1+0+0</option>
+                <option value="0+0+1">0+0+1</option>
+                <option value="1+1+0">1+1+0</option>
+              </select>
+              <div className="med_when_action">
+                <button data-med_id={val+1} className="btn btn-sm btn-success save">✓</button>
+              </div>
+            </div>
+            {!isEditable && <h5 className={`taking-time-${val+1}`} style={{marginLeft: '20px'}}></h5>}
+            <div className="taking_time select folded">
+              <select className={`meal med_meal-${val+1}`} data-med_id={val+1}>
+                <option value={1}>After Meal</option>
+                <option value={2}>Before Meal</option>
+                <option value={3}>Take any time</option>
+              </select>
+              <div className="med_meal_action">
+                <button data-med_id={val+1} className="btn btn-sm btn-success save">✓</button>
+              </div>
+            </div>
+          </div>
+          <div className="med_footer">
+          {!isEditable && <h5 className={`taking-for-${val+1} med_period`}></h5>}
+            <div className="period folded" style={{display: !isEditable?'block':'Hidden'}}>
+              Take for <input className={`med_period med_duration-${val+1}`} type="text" data-med_id={val+1} placeholder="? days/weeks..." />
+              <div className="med_period_action">
+                <button data-med_id={val+1} className="btn btn-sm btn-success save">✓</button>
+              </div>
+              <span className="date" />
+            </div>
+            <div className="del_action">
+              <button data-med_id={val+1} className="btn btn-sm btn-danger delete"><i className="fa fa-trash" aria-hidden="true" /></button>
+            </div>
+          </div>
+          <hr />
+        </div>) })
+        }
+
                       </section>
-                      {isEditable && <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more.">Click this box to add medicine...</div>}
+                      {isEditable && <div id="add_med" data-toggle="tooltip" data-placement="right" title="Click anywhere on the blank space to add more." onClick={()=>{
+                         setMedCnt(medCnt+1);
+                         let arr = [...medCntArr];
+                         arr.push(medCnt);
+                         setMedCntArr(arr);
+                      }} >Click this box to add medicine...</div>}
                     </div>
                   </td>
                 </tr>}
@@ -443,13 +605,16 @@ export default function Prescription(props) {
             <div id="snacked">Saved!</div>
           </div>
         </div>
-        <script id="new_medicine" type="text/template">
-        { <div className="med" style={{}}>
+        <div id="new_medicine" type="text/template">
+         
+        { !isEditable && <div className="med" style={{}}>
            <input className="med_name med-{{med_id}} med_name-{{med_id}}" data-med_id="{{med_id}}" data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" />
           <div className="med_name_action">
             <button data-med_id="{{med_id}}" className="btn btn-sm btn-success save">Save</button>
             <button className="btn btn-sm btn-danger cancel-btn">Cancel</button>
           </div>
+
+
           <div className="schedual">
           {!isEditable && <h5 className='sc-{{med_id}}'></h5>}
             <div className="sc_time folded">
@@ -495,7 +660,7 @@ export default function Prescription(props) {
           <hr />
         </div>
         }
-        </script>
+        </div>
       </div>
       <div style={{position: 'fixed', right:0, zIndex: 99999, padding: 20}}>
       <button style={{
@@ -512,7 +677,6 @@ export default function Prescription(props) {
       }}>Print Prescription</button>
       </div>
       {console.log('all med ', medicineList)}
-
     </div>
 
 {/* <button style={{width: '300px', height:'50px', marginLeft: 'auto', marginRight: 'auto', background: 'rgba(0,0,0,0.2)', marginTop: '500px',}} onClick={()=>dPdf()}>Save Prescription</button> */}

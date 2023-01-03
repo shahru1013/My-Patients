@@ -7,7 +7,6 @@ import moment from 'moment/moment';
 export default function PrescriptionList(props) {
 
   const [startDate, setStartDate] = useState(null);
-
   const [medicines, setMedicines] = useState({});
   const [advice, setadvice] = useState({});
   const [tests, setTests] = useState({});
@@ -16,18 +15,19 @@ export default function PrescriptionList(props) {
   console.log('pppp  dd ', patientData, props);
   
 
- 
 
-  const symptoms = []//JSON.parse(patientData?.data[0]?.symptoms)
+  const symptoms = null;
 
 
   useEffect(()=>{
     forMateData(props?.patientData);
     console.log('jfdhvj ', props?.patientData);
     setStartDate(new Date(moment(props?.patientData[0].date, 'DD/MM/YYYY')));
-    // setadvice(JSON.parse(patientData?.data[0]?.advice || {}));
+    setadvice(JSON.parse(patientData[0]?.advice || {}));
     // setMedicines(JSON.parse(patientData?.data[0]?.prescription || {}));
-    // setTests(JSON.parse(patientData?.data[0]?.tests ||{}));
+    setTests(JSON.parse(patientData[0]?.tests ||{}));
+    //symptoms =  JSON.parse(patientData[0]?.symptoms || {})
+    
   },[]);
 
   useEffect(()=>{

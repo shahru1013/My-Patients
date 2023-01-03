@@ -5,7 +5,6 @@ module.exports = app => {
 
   app.post("/prepare-new-prescription", admins.FindPatient);
   app.get("/get-prescriptions", admins.GetPrescriptionById);
-  
   app.post("/doctor-invitation", sendDoctorInvitationMail);
 
 };
