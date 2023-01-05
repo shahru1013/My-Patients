@@ -8,6 +8,8 @@ import PrescriptionLogo from '../Images/prescription_logo.jpg';
 
 export default function Prescription(props) {
 
+  console.log('ldsssss ', props);
+
   const medicines = props?.medicine || [];
   const advice = props?.advice;
   const symptoms = props?.symptoms;
@@ -29,6 +31,15 @@ export default function Prescription(props) {
   
  
   console.log('omaga kkk 111 ahaha', medicineList, medicines, advice, sympToms);
+
+
+  useEffect(()=>{
+    console.log('nnnnnnnnnnn proo ', props);
+    setMedicineList(props?.medicine);
+    setTestsList(props?.tests);
+    setAdviceList(props?.advice);
+
+  },[]);
 
 
   useEffect(()=>{
@@ -242,25 +253,25 @@ export default function Prescription(props) {
       // $('.medicine').empty();
       // $("#new_medicine").empty();
       console.log('omaga kkk 777', medicines);
-      if(medicines != null){
-        medicines.forEach(element => {
-          med_id++;
+      // if(medicines != null){
+      //   medicines.forEach(element => {
+      //     med_id++;
           
-          let sourceTemplate = $("#new_medicine").html();
-          Mustache.parse(sourceTemplate);
-          let sourceHTML = Mustache.render(sourceTemplate, { med_id });
-          let medicine = $(".med_list");
-          medicine.append(sourceHTML);
-          console.log('ee ', element);
-          console.log('ee ', $("data-med_id"));
-          $(".med-"+med_id).val(element?.med_name);
-          $(".med-"+med_id).prop('readonly', true);
-          $(".uneditable").prop('readonly', true);
-          $(".sc-"+med_id).append(element?.med_schedule);
-          $(".taking-time-"+med_id).append(element?.med_taken_after == 1?'After Meal': 'Before Meal');
-          $(".taking-for-"+med_id).append('Taking for '+element?.med_duration);
-        });
-      }
+      //     let sourceTemplate = $("#new_medicine").html();
+      //     Mustache.parse(sourceTemplate);
+      //     let sourceHTML = Mustache.render(sourceTemplate, { med_id });
+      //     let medicine = $(".med_list");
+      //     medicine.append(sourceHTML);
+      //     console.log('ee ', element);
+      //     console.log('ee ', $("data-med_id"));
+      //     $(".med-"+med_id).val(element?.med_name);
+      //     $(".med-"+med_id).prop('readonly', true);
+      //     $(".uneditable").prop('readonly', true);
+      //     $(".sc-"+med_id).append(element?.med_schedule);
+      //     $(".taking-time-"+med_id).append(element?.med_taken_after == 1?'After Meal': 'Before Meal');
+      //     $(".taking-for-"+med_id).append('Taking for '+element?.med_duration);
+      //   });
+      // }
 
     }
 
@@ -391,7 +402,7 @@ export default function Prescription(props) {
                           !isEditable && <div style={{marginTop: '10px'}}>
                             
                             {
-                              symptoms?.map((val, id)=>{
+                              props?.symptoms?.map((val, id)=>{
                                 return(
                                   <ul>
                                     <li>{val}</li>
@@ -440,7 +451,7 @@ export default function Prescription(props) {
                         {
                           !isEditable && <div style={{marginTop: '10px'}}>
                             
-                            {advice?.length &&
+                            {props?.advice?.length &&
                               advice?.map((val, id)=>{
                                 return(
                                   <ul>
@@ -467,11 +478,83 @@ export default function Prescription(props) {
                     <hr />
                     <div className="medicine">
                       <section className="med_list">
+
                         {
-                          console.log('nnnnnnn ', medCnt, medCntArr)
+                          console.log('nnnnnnn uuu ',props, medicineList, medCnt, medCntArr)
                         }
 
-                      { medCntArr.map((val)=>{
+
+
+
+                        {
+                          
+                          !isEditable &&
+                          props?.medicine?.map((val)=>{
+
+                          return(
+                          <div className="med" style={{}}>
+                         
+               
+                         <input value={val.med_name} className={`med_name med-${1} med_name-${1}`} data-med_id={1} data-toggle="tooltip" title="Click to edit..." placeholder="Enter medicine name" onChange={(e)=>{  
+                          }}
+                         
+                          />
+                  
+               
+                         <div className="schedual">
+                         {!isEditable && <h5 className={`sc-${1}`}></h5>}
+                           <div className="sc_time" style={{width: '80%'}}>
+                             {/* <select className={`sc med_select-${1}`} data-med_id={1} onChange={(e)=>{
+                               console.log('cccccccc ', e);
+                             }}> */}
+                               <option value={val?.med_schedule} selected>{val?.med_schedule}</option>
+                               
+                             {/* </select> */}
+                            
+                           </div>
+                           {!isEditable && <h5 className={`taking-time-${1}`} style={{marginLeft: '0px'}}></h5>}
+                           <div className="taking_time select">
+                             <select className={`meal med_meal-${1}`} data-med_id={1}>
+                               <option value={1}>{val?.med_taken_after == 1?'After Meal': 'Before Meal'}</option>
+                               {/* <option value={2}>Before Meal</option>
+                               <option value={3}>Take any time</option> */}
+                             </select>
+                            
+                           </div>
+                         </div>
+                         <div className="med_footer">
+                         {!isEditable && <h5 className={`taking-for-${1} med_period`}></h5>}
+                           <div className="period folded" style={{display: !isEditable?'block':'Hidden'}}>
+                            Take for {val?.med_duration}
+                             <div className="med_period_action">
+                               <button data-med_id={1} className="btn btn-sm btn-success save">✓</button>
+                             </div>
+                             <span className="date" />
+                           </div>
+                           <div className="del_action">
+                             <button data-med_id={1} className="btn btn-sm btn-danger delete"><i className="fa fa-trash" aria-hidden="true" /></button>
+                           </div>
+                         </div>
+                         <hr />
+                       </div>)
+                       })
+
+
+
+
+                        }
+
+
+
+
+
+
+
+
+
+
+
+                      {isEditable && medCntArr.map((val)=>{
                         
                      
                       return(

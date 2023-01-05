@@ -83,7 +83,8 @@ body {
     list-style: square;
     margin: 0;
     padding-left: 10px;
-    height: 100%;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
   .advice p {
     letter-spacing: 0;
